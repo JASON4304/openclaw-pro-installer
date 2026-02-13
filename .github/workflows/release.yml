@@ -16,8 +16,8 @@ jobs:
       - name: Create artifacts directory
         run: mkdir artifacts
 
-      - name: Copy project files
-        run: cp -r . artifacts/
+      - name: Copy project files (excluding artifacts)
+        run: rsync -av --exclude 'artifacts' ./ artifacts/
 
       - name: Create ZIP
         run: |
