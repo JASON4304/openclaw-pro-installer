@@ -1,0 +1,17 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: zip -r openclaw-pro-installer.zip .
+      - run: tar -czf openclaw-pro-installer.tar.gz .
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            openclaw-pro-installer.zip
+            openclaw-pro-installer.tar.gz
