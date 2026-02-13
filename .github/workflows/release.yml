@@ -1,17 +1,39 @@
 name: Release
+
 on:
   push:
     tags:
       - "v*.*.*"
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: zip -r openclaw-pro-installer.zip .
-      - run: tar -czf openclaw-pro-installer.tar.gz .
-      - uses: softprops/action-gh-release@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Create artifacts directory
+        run: mkdir artifacts
+
+      - name: Copy project files
+        run: cp -r . artifacts/
+
+      - name: Create ZIP
+        run: |
+          cd artifacts
+          zip -r openclaw-pro-installer.zip .
+
+      - name: Create TAR.GZ
+        run: |
+          cd artifacts
+          tar -czf openclaw-pro-installer.tar.gz .
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v1
         with:
           files: |
-            openclaw-pro-installer.zip
-            openclaw-pro-installer.tar.gz
+            artifacts/openclaw-pro-installer.zip
+            artifacts/openclaw-pro-installer.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
